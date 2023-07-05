@@ -189,6 +189,9 @@ const Subscribe: React.FC = () => {
         const formData = {
           ...data,
           receipt_file: fileName,
+          members: data.members,
+          staff: numStaffs === 0 ? [] : data.staff,
+          drivers: numDrivers === 0 ? [] : data.drivers,
         };
 
         setLoading(true);
@@ -210,7 +213,7 @@ const Subscribe: React.FC = () => {
         setLoading(false);
       }
     },
-    [setLoading, setSuccess, fileName]
+    [setLoading, setSuccess, fileName, numStaffs, numDrivers]
   );
 
   const handleClickSetMembers = useCallback(() => {
