@@ -1,4 +1,10 @@
-import React, { useCallback, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
 import Head from "next/head";
 import { Form } from "@unform/web";
@@ -7,71 +13,240 @@ import * as Yup from "yup";
 
 import { FormHandles, SubmitHandler } from "@unform/core";
 import { toast } from "react-toastify";
-import { AxiosError } from "axios";
+import { IoMdClose } from "react-icons/io";
 import { Button } from "../../components/Button";
 import { api } from "../../services/api";
 import { Input, InputMask, InputSelect } from "../../components/Inputs";
 
 import { getValidationErrors } from "../../utils/getValidationErrors";
-import { Color } from "../../styles/pages/subscribe";
+import {
+  Color,
+  ContainerValues,
+  FileContainer,
+} from "../../styles/pages/subscribe";
+import { ShowValue } from "../../components/ShowValue";
+import { Upload } from "../../components/Upload";
 
 interface SubscribeFormData {
-  section_id: string;
-  schooling_id: string;
-
-  name: string;
-  email: string;
-  birthday: string;
-  country: string;
-  state: string;
-  formation: string;
-  work: string;
-  been_planetarium: boolean;
-  planetariums: string;
-  comments: string;
+  cla_name: string;
+  scout_group: {
+    name: string;
+    number: string;
+    city: string;
+    state: string;
+    district_name: string;
+  };
+  payment: {
+    pix_key: string;
+    bank: string;
+    agency: string;
+    account: string;
+    holder: {
+      name: string;
+      document: string;
+    };
+  };
+  responsable: {
+    name: string;
+    email: string;
+    phone: string;
+  };
+  receipt_file: string;
+  members: {
+    name: string;
+    sex: string;
+    register: string;
+    restrictions: {
+      alimentation: string;
+      health: string;
+    };
+    type: string;
+    arrive_for_lunch: boolean;
+  }[];
+  staff: {
+    name: string;
+    sex: string;
+    register: string;
+    function: string;
+    can_assist_in: string;
+    restrictions: {
+      alimentation: string;
+      health: string;
+    };
+    arrive_for_lunch: boolean;
+  }[];
+  drivers: {
+    name: string;
+    restrictions: {
+      alimentation: string;
+      health: string;
+    };
+    arrive_for_lunch: boolean;
+  }[];
 }
+
+const vMEMBER = 100;
+const vSTAFF = 100;
+const vDRIVER = 85;
+
 const Subscribe: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [numMembers, setNumMembers] = useState<number[]>([]);
-  const [numStaffs, setNumStaffs] = useState<number[]>([]);
-  const [numDrivers, setNumDrivers] = useState<number[]>([]);
+  const [isFileUploaded, setIsFileUploaded] = useState(false);
+  const [isUploadStarted, setIsUploadStarted] = useState(false);
+  const [numMembers, setNumMembers] = useState<number>(0);
+  const [numStaffs, setNumStaffs] = useState<number>(0);
+  const [numDrivers, setNumDrivers] = useState<number>(0);
+
+  const [localFile, setLocalFile] = React.useState<File | null>(null);
+  const [fileUrl, setFileUrl] = React.useState<string | null>(null);
+  const [fileName, setFileName] = React.useState<string | null>(null);
+
+  const uploadFile = useCallback(async () => {
+    if (localFile) {
+      const data = new FormData();
+      data.append("file", localFile);
+      try {
+        setIsUploadStarted(true);
+        const response = await api.post("/inscriptions/subscribe/upload", data);
+
+        setFileName(response.data.file);
+
+        setIsFileUploaded(true);
+      } catch (err) {
+        toast.error("Erro ao fazer upload do arquivo");
+      }
+    }
+  }, [localFile]);
+
+  const handleUpload = useCallback((f: File[]) => {
+    setLocalFile(f[0]);
+    setFileUrl(URL.createObjectURL(f[0]));
+  }, []);
+
+  const handleRemoveFile = useCallback(() => {
+    setLocalFile(null);
+    setFileUrl(null);
+  }, []);
+
+  useEffect(() => {
+    const timer1 = setTimeout(() => {
+      localFile && uploadFile();
+    }, 5000);
+
+    return () => {
+      clearTimeout(timer1);
+    };
+  }, [localFile, uploadFile]);
 
   const handleSubmit: SubmitHandler<SubscribeFormData> = useCallback(
     async (data): Promise<void> => {
-      console.log(data);
       try {
         const schema = Yup.object().shape({
-          section_id: Yup.string().required("O Turno é obrigatório"),
-          schooling_id: Yup.string().required("Escolaridade é obrigatório"),
-          name: Yup.string().required("Nome obrigatório"),
-          email: Yup.string()
-            .required("E-mail obrigatório")
-            .email("Digite um e-mail válido (example@domin.com.br)"),
-          birthday: Yup.string().required("Data de nascimento obrigatória"),
-          country: Yup.string().required("Cidade é obrigatório"),
-          state: Yup.string().required("Estado é obrigatório"),
-          formation: Yup.string().required("Formação é obrigatório"),
-          work: Yup.string().required("Trabalho é obrigatório"),
-          been_planetarium: Yup.boolean().required("Campo obrigatório"),
-          planetariums: Yup.string(),
-          comments: Yup.string(),
+          cla_name: Yup.string().required("Nome da CLã é obrigatório"),
+          scout_group: Yup.object().shape({
+            name: Yup.string().required(
+              "Nome do Grupo Escoteiro é obrigatório"
+            ),
+            number: Yup.string().required(
+              "Numeral do Grupo Escoteiro é obrigatório"
+            ),
+            city: Yup.string().required(
+              "Cidade do Grupo Escoteiro é obrigatório"
+            ),
+            state: Yup.string().required(
+              "Estado do Grupo Escoteiro é obrigatório"
+            ),
+            district_name: Yup.string().required(
+              "Distrito do Grupo Escoteiro é obrigatório"
+            ),
+          }),
+          payment: Yup.object().shape({
+            pix_key: Yup.string().required("Chave PIX é obrigatório"),
+            bank: Yup.string().required("Banco é obrigatório"),
+            agency: Yup.string().required("Agência é obrigatório"),
+            account: Yup.string().required("Conta é obrigatório"),
+            holder: Yup.object().shape({
+              name: Yup.string().required("Nome do titular é obrigatório"),
+              document: Yup.string().required("CPF do titular é obrigatório"),
+            }),
+          }),
+          responsable: Yup.object().shape({
+            name: Yup.string().required("Nome do responsável é obrigatório"),
+            email: Yup.string()
+              .required("E-mail do responsável é obrigatório")
+              .email("Digite um e-mail válido"),
+            phone: Yup.string().required(
+              "Telefone do responsável é obrigatório"
+            ),
+          }),
+          members: Yup.array().of(
+            Yup.object().shape({
+              name: Yup.string().required("Nome é obrigatório"),
+              sex: Yup.string().required("Sexo é obrigatório"),
+              register: Yup.string().required("Registro é obrigatório"),
+              restrictions: Yup.object().shape({
+                alimentation: Yup.string().required(
+                  "Restrições alimentares é obrigatório"
+                ),
+                health: Yup.string().required(
+                  "Restrições de saúde é obrigatório"
+                ),
+              }),
+              type: Yup.string().required("Tipo é obrigatório"),
+              arrive_for_lunch: Yup.boolean().required(
+                "Chegada para o almoço é obrigatório"
+              ),
+            })
+          ),
+          staff: Yup.array().of(
+            Yup.object().shape({
+              name: Yup.string().required("Nome é obrigatório"),
+              sex: Yup.string().required("Sexo é obrigatório"),
+              register: Yup.string().required("Registro é obrigatório"),
+              function: Yup.string().required("Função é obrigatório"),
+              restrictions: Yup.object().shape({
+                alimentation: Yup.string().required(
+                  "Restrições alimentares é obrigatório"
+                ),
+                health: Yup.string().required(
+                  "Restrições de saúde é obrigatório"
+                ),
+              }),
+              arrive_for_lunch: Yup.boolean().required(
+                "Chegada para o almoço é obrigatório"
+              ),
+            })
+          ),
+          drivers: Yup.array().of(
+            Yup.object().shape({
+              name: Yup.string().required("Nome é obrigatório"),
+              restrictions: Yup.object().shape({
+                alimentation: Yup.string().required(
+                  "Restrições alimentares é obrigatório"
+                ),
+                health: Yup.string().required(
+                  "Restrições de saúde é obrigatório"
+                ),
+              }),
+              arrive_for_lunch: Yup.boolean().required(
+                "Chegada para o almoço é obrigatório"
+              ),
+            })
+          ),
         });
         await schema.validate(data, { abortEarly: false });
 
         formRef.current?.setErrors({});
 
-        const parts = data.birthday.split("/");
-
         const formData = {
           ...data,
-          planetariums: data.planetariums || "",
-          birthday: new Date(`${parts[2]}-${parts[1]}-${Number(parts[0]) + 1}`),
+          receipt_file: fileName,
         };
 
         setLoading(true);
-        await api.post("/enrolled", formData);
+        await api.post("/inscriptions/subscribe", formData);
 
         formRef.current?.reset();
         setLoading(false);
@@ -79,21 +254,6 @@ const Subscribe: React.FC = () => {
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
           formRef.current?.setErrors(getValidationErrors(err));
-        } else if (err instanceof AxiosError) {
-          if (
-            err.response?.data.message ===
-            "This Email address already subscribed."
-          )
-            toast("Erro na inscrição, e-mail já utilizado", {
-              type: "error",
-            });
-          if (err.response?.data.message === "Section not limit.")
-            toast(
-              "Erro, evento lotado na sessão selecionada, Não tem mais vagas nessa sessão.",
-              {
-                type: "error",
-              }
-            );
         } else {
           // console.log(err);
           toast("Erro na inscrição, tente novamente mais tarde", {
@@ -104,52 +264,83 @@ const Subscribe: React.FC = () => {
         setLoading(false);
       }
     },
-    [setLoading, setSuccess]
+    [setLoading, setSuccess, fileName]
   );
 
   const handleClickSetMembers = useCallback(() => {
     const n = formRef.current?.getFieldValue("n_j");
 
-    if (!n) setNumMembers([]);
+    if (!n) setNumMembers(0);
 
-    if (n > 0) {
-      setNumMembers([]);
-      const arr = [];
-      for (let i = 0; i < n; i++) {
-        arr.push(i);
-      }
-      setNumMembers(arr);
-    }
+    setNumMembers(n);
   }, []);
   const handleClickSetStaffs = useCallback(() => {
     const n = formRef.current?.getFieldValue("n_s");
 
-    if (!n) setNumStaffs([]);
+    if (!n) setNumStaffs(0);
 
-    if (n > 0) {
-      setNumStaffs([]);
-      const arr = [];
-      for (let i = 0; i < n; i++) {
-        arr.push(i);
-      }
-      setNumStaffs(arr);
-    }
+    setNumStaffs(n);
   }, []);
 
   const handleClickSetDrivers = useCallback(() => {
     const n = formRef.current?.getFieldValue("n_d");
 
-    if (!n) setNumDrivers([]);
+    if (!n) setNumDrivers(0);
 
-    if (n > 0) {
-      setNumDrivers([]);
-      const arr = [];
-      for (let i = 0; i < n; i++) {
-        arr.push(i);
-      }
-      setNumDrivers(arr);
-    }
+    setNumDrivers(n);
   }, []);
+
+  const nunsMembers = useMemo(() => {
+    const nuns = [];
+
+    if (numMembers > 0) {
+      for (let i = 0; i < numMembers; i++) {
+        nuns.push(i);
+      }
+    }
+
+    return nuns;
+  }, [numMembers]);
+
+  const nunsStaffs = useMemo(() => {
+    const nuns = [];
+
+    if (numStaffs > 0) {
+      for (let i = 0; i < numStaffs; i++) {
+        nuns.push(i);
+      }
+    }
+
+    return nuns;
+  }, [numStaffs]);
+
+  const nunsDrivers = useMemo(() => {
+    const nuns = [];
+
+    if (numDrivers > 0) {
+      for (let i = 0; i < numDrivers; i++) {
+        nuns.push(i);
+      }
+    }
+
+    return nuns;
+  }, [numDrivers]);
+
+  const valueMembers = useMemo(() => {
+    return numMembers * vMEMBER;
+  }, [numMembers]);
+
+  const valueStaffs = useMemo(() => {
+    return numStaffs * vSTAFF;
+  }, [numStaffs]);
+
+  const valueDrivers = useMemo(() => {
+    return numDrivers * vDRIVER;
+  }, [numDrivers]);
+
+  const valueTotal = useMemo(() => {
+    return valueMembers + valueStaffs + valueDrivers;
+  }, [valueMembers, valueStaffs, valueDrivers]);
 
   return (
     <>
@@ -256,21 +447,21 @@ const Subscribe: React.FC = () => {
                     <Input
                       name="bank"
                       dark={false}
-                      label="Nome do Distrito do Grupo Escoteiro"
+                      label="Banco"
                       placeholder="Distrito"
                       required
                     />
                     <Input
                       name="agency"
                       dark={false}
-                      label="Nome do Distrito do Grupo Escoteiro"
+                      label="Agência"
                       placeholder="Distrito"
                       required
                     />
                     <Input
                       name="account"
                       dark={false}
-                      label="Nome do Distrito do Grupo Escoteiro"
+                      label="Conta"
                       placeholder="Distrito"
                       required
                     />
@@ -384,7 +575,7 @@ const Subscribe: React.FC = () => {
                         </tr>
                       </thead>
                       <tbody>
-                        {numMembers.map((i) => (
+                        {nunsMembers.map((i) => (
                           <Scope path={String(i)}>
                             <tr>
                               <td>
@@ -464,7 +655,7 @@ const Subscribe: React.FC = () => {
                             </tr>
                           </Scope>
                         ))}
-                        {numMembers.length === 0 && (
+                        {nunsMembers.length === 0 && (
                           <Scope path="a">
                             <tr>
                               <td>
@@ -599,7 +790,7 @@ const Subscribe: React.FC = () => {
                         </tr>
                       </thead>
                       <tbody>
-                        {numStaffs.map((i) => (
+                        {nunsStaffs.map((i) => (
                           <Scope path={String(i)}>
                             <tr>
                               <td>
@@ -698,7 +889,7 @@ const Subscribe: React.FC = () => {
                             </tr>
                           </Scope>
                         ))}
-                        {numStaffs.length === 0 && (
+                        {nunsStaffs.length === 0 && (
                           <Scope path="a">
                             <tr>
                               <td>
@@ -856,7 +1047,7 @@ const Subscribe: React.FC = () => {
                         </tr>
                       </thead>
                       <tbody>
-                        {numDrivers.map((i) => (
+                        {nunsDrivers.map((i) => (
                           <Scope path={String(i)}>
                             <tr>
                               <td>
@@ -898,7 +1089,7 @@ const Subscribe: React.FC = () => {
                             </tr>
                           </Scope>
                         ))}
-                        {numDrivers.length === 0 && (
+                        {nunsDrivers.length === 0 && (
                           <Scope path="a">
                             <tr>
                               <td>
@@ -945,8 +1136,67 @@ const Subscribe: React.FC = () => {
                   </Scope>
                 </div>
 
+                <ContainerValues>
+                  <h1>Valores por cada grupo de pessoas:</h1>
+                  <ShowValue value={valueMembers} label="Seniors e pioneiros" />
+                  <ShowValue
+                    value={valueStaffs}
+                    label="Mestres, assistentes e diretores"
+                  />
+                  <ShowValue value={valueDrivers} label="Motoristas" />
+                  <ShowValue value={valueTotal} label="Valor total" total />
+                </ContainerValues>
+
+                <div className="row">
+                  <h2>
+                    Antes de realizar a inscrição, faça o pagamento e anexe o
+                    comprovante no campo abaixo.
+                  </h2>
+                </div>
+                <FileContainer>
+                  {localFile ? (
+                    <>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          handleRemoveFile();
+                        }}
+                        disabled={isUploadStarted || isFileUploaded}
+                      >
+                        <IoMdClose />
+                      </button>
+                      {localFile.type === "application/pdf" ? (
+                        <iframe
+                          src={fileUrl || ""}
+                          frameBorder="0"
+                          title={fileUrl || ""}
+                        />
+                      ) : (
+                        <img src={fileUrl || ""} alt="" />
+                      )}
+
+                      {isUploadStarted && !isFileUploaded && (
+                        <h2>
+                          <Color>Carregando arquivo...</Color>
+                        </h2>
+                      )}
+                      {isFileUploaded && (
+                        <h2>
+                          <Color>Arquivo carregado com sucesso!</Color>
+                        </h2>
+                      )}
+                    </>
+                  ) : (
+                    <Upload onUpload={handleUpload} />
+                  )}
+                </FileContainer>
+
                 <div className="row" style={{ marginTop: 20 }}>
-                  <Button type="submit" loading={loading} disabled={loading}>
+                  <Button
+                    type="submit"
+                    loading={loading}
+                    disabled={loading || !isFileUploaded}
+                  >
                     Inscrever-se
                   </Button>
                 </div>
