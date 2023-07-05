@@ -294,7 +294,7 @@ const Subscribe: React.FC = () => {
   return (
     <>
       <Head>
-        <title>Inscrições | Interclas Form</title>
+        <title>Inscrições | Interclãs Form</title>
       </Head>
 
       {success && (
@@ -317,7 +317,7 @@ const Subscribe: React.FC = () => {
             <div className="container">
               <div className="row">
                 <h1>
-                  <Color>Formulário de inscrição para o interclas</Color>
+                  <Color>Formulário de inscrição para o interclãs</Color>
                 </h1>
               </div>
               <Form onSubmit={handleSubmit} ref={formRef}>

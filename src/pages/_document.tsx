@@ -51,7 +51,7 @@ export default class MyDocument extends Document {
 
           <meta
             name="description"
-            content="Formulário de inscrição para o interclas"
+            content="Formulário de inscrição para o interclãs"
           />
 
           <link rel="icon" href="/favicon.ico" />

@@ -10,6 +10,20 @@ const theme = {
       background: "#F9F9F9",
     },
     primary: "#B20E19",
+    grayscale: {
+      bg: "#F7F8FC",
+      white: "#FFFFFF",
+      divider: "#DFE0EB",
+      gray: {
+        light: "#9FA2B4",
+        default: "#C5C7CD",
+      },
+      black: "#252733",
+    },
+    accent: {
+      default: "#3751FF",
+      light: "#DDE2FF",
+    },
     form: {
       dark: {
         bg: "#312E38",
