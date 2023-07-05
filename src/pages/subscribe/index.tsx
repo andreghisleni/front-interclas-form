@@ -294,7 +294,7 @@ const Subscribe: React.FC = () => {
   return (
     <>
       <Head>
-        <title>Inscrições | Interclãs Form</title>
+        <title>Inscrições | INTERCLÃS Form</title>
       </Head>
 
       {success && (
@@ -317,7 +317,7 @@ const Subscribe: React.FC = () => {
             <div className="container">
               <div className="row">
                 <h1>
-                  <Color>Formulário de inscrição para o interclãs</Color>
+                  <Color>Formulário de inscrição para o INTERCLÃS</Color>
                 </h1>
               </div>
               <Form onSubmit={handleSubmit} ref={formRef}>
@@ -383,7 +383,7 @@ const Subscribe: React.FC = () => {
                       justifyContent: "start",
                     }}
                   >
-                    <Color>Dados bancarios para reembolsos:</Color>
+                    <Color>Dados bancários para reembolsos:</Color>
                   </h2>
                   <div className="row">
                     <Input
@@ -487,7 +487,7 @@ const Subscribe: React.FC = () => {
                   <Color>PIONEIROS OU SENIORES (MÍNIMO 17 ANOS E MEIO)</Color>
                 </h2>
                 <h2>
-                  <Color>INVESTIMENTO: R$ 100,00</Color>
+                  <Color>INVESTIMENTO INDIVIDUAL: R$ 100,00</Color>
                 </h2>
                 <div className="row" style={{ marginTop: 20 }}>
                   <Input
@@ -699,7 +699,7 @@ const Subscribe: React.FC = () => {
                   <Color>MESTRES / ASSISTENTES / DIRETORES</Color>
                 </h2>
                 <h2>
-                  <Color>INVESTIMENTO: R$ 100,00</Color>
+                  <Color>INVESTIMENTO INDIVIDUAL: R$ 100,00</Color>
                 </h2>
                 <div className="row" style={{ marginTop: 20 }}>
                   <Input
@@ -1087,7 +1087,10 @@ const Subscribe: React.FC = () => {
 
                 <ContainerValues>
                   <h1>Valores por cada grupo de pessoas:</h1>
-                  <ShowValue value={valueMembers} label="Seniores e pioneiros" />
+                  <ShowValue
+                    value={valueMembers}
+                    label="Seniores e pioneiros"
+                  />
                   <ShowValue
                     value={valueStaffs}
                     label="Mestres, assistentes e diretores"

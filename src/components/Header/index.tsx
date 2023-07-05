@@ -31,7 +31,7 @@ export const Header: React.FC = () => {
                 <Color>IV INTERCLÃS</Color>
               </h1>
               <h2>
-                <Color>Chapecó-Sc 19 e 20/08/2021</Color>
+                <Color>Chapecó/SC 19 e 20/08/2023</Color>
               </h2>
             </div>
             <Image
