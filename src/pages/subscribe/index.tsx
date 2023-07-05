@@ -181,60 +181,6 @@ const Subscribe: React.FC = () => {
               "Telefone do responsável é obrigatório"
             ),
           }),
-          members: Yup.array().of(
-            Yup.object().shape({
-              name: Yup.string().required("Nome é obrigatório"),
-              sex: Yup.string().required("Sexo é obrigatório"),
-              register: Yup.string().required("Registro é obrigatório"),
-              restrictions: Yup.object().shape({
-                alimentation: Yup.string().required(
-                  "Restrições alimentares é obrigatório"
-                ),
-                health: Yup.string().required(
-                  "Restrições de saúde é obrigatório"
-                ),
-              }),
-              type: Yup.string().required("Tipo é obrigatório"),
-              arrive_for_lunch: Yup.boolean().required(
-                "Chegada para o almoço é obrigatório"
-              ),
-            })
-          ),
-          staff: Yup.array().of(
-            Yup.object().shape({
-              name: Yup.string().required("Nome é obrigatório"),
-              sex: Yup.string().required("Sexo é obrigatório"),
-              register: Yup.string().required("Registro é obrigatório"),
-              function: Yup.string().required("Função é obrigatório"),
-              restrictions: Yup.object().shape({
-                alimentation: Yup.string().required(
-                  "Restrições alimentares é obrigatório"
-                ),
-                health: Yup.string().required(
-                  "Restrições de saúde é obrigatório"
-                ),
-              }),
-              arrive_for_lunch: Yup.boolean().required(
-                "Chegada para o almoço é obrigatório"
-              ),
-            })
-          ),
-          drivers: Yup.array().of(
-            Yup.object().shape({
-              name: Yup.string().required("Nome é obrigatório"),
-              restrictions: Yup.object().shape({
-                alimentation: Yup.string().required(
-                  "Restrições alimentares é obrigatório"
-                ),
-                health: Yup.string().required(
-                  "Restrições de saúde é obrigatório"
-                ),
-              }),
-              arrive_for_lunch: Yup.boolean().required(
-                "Chegada para o almoço é obrigatório"
-              ),
-            })
-          ),
         });
         await schema.validate(data, { abortEarly: false });
 
