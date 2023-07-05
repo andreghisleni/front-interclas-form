@@ -345,7 +345,7 @@ const Subscribe: React.FC = () => {
   return (
     <>
       <Head>
-        <title>Planetario - Inscrições</title>
+        <title>Inscrições | Interclas Form</title>
       </Head>
 
       {success && (

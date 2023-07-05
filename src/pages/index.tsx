@@ -1,14 +1,11 @@
-import React, { useEffect } from "react";
-import Router from "next/router";
+import React from "react";
 
 const Home: React.FC = () => {
-  useEffect(() => {
-    const { pathname } = Router;
-    if (pathname === "/") {
-      Router.push("/404");
-    }
-  });
-  return <div />;
+  return (
+    <div>
+      <h1>Pagina em desenvolvimento</h1>
+    </div>
+  );
 };
 
 export default Home;
