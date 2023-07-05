@@ -493,7 +493,7 @@ const Subscribe: React.FC = () => {
                   <Input
                     name="n_j"
                     dark={false}
-                    label="Número de jovens (pioneiros e seniors)"
+                    label="Número de jovens (pioneiros e seniores)"
                     type="number"
                     placeholder="0"
                     min={1}
@@ -705,7 +705,7 @@ const Subscribe: React.FC = () => {
                   <Input
                     name="n_s"
                     dark={false}
-                    label="Número de jovens (pioneiros e seniors)"
+                    label="Número de Mestres / Assistentes / Diretores"
                     type="number"
                     placeholder="0"
                     min={1}
