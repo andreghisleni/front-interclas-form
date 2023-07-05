@@ -1087,7 +1087,7 @@ const Subscribe: React.FC = () => {
 
                 <ContainerValues>
                   <h1>Valores por cada grupo de pessoas:</h1>
-                  <ShowValue value={valueMembers} label="Seniors e pioneiros" />
+                  <ShowValue value={valueMembers} label="Seniores e pioneiros" />
                   <ShowValue
                     value={valueStaffs}
                     label="Mestres, assistentes e diretores"

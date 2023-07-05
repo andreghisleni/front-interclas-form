@@ -59,7 +59,7 @@ const Metrics: React.FC<{
 
               <Card>
                 <div>
-                  <header>Total De Seniors Inscritos</header>
+                  <header>Total De Seniores Inscritos</header>
                   <h2>{metrics.members.types.senior}</h2>
                 </div>
               </Card>
