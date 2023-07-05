@@ -7,6 +7,7 @@ import InterclasLogo from "../../assets/interclas_distintivo.png";
 // import AstroLogo from "../../assets/astro.png";
 
 import { Container, ContainerImages } from "./styles";
+import { Color } from "../../styles/pages/subscribe";
 
 export const Header: React.FC = () => {
   return (
@@ -14,6 +15,19 @@ export const Header: React.FC = () => {
       <div className="container">
         <div className="row">
           <ContainerImages>
+            <Image
+              src={InterclasLogo}
+              alt="Distintivo Interclas"
+              height={160}
+            />
+            <div>
+              <h1>
+                <Color>IV INTERCLÃS</Color>
+              </h1>
+              <h2>
+                <Color>Chapecó-Sc 19 e 20/08/2021</Color>
+              </h2>
+            </div>
             <Image
               src={InterclasLogo}
               alt="Distintivo Interclas"
