@@ -12,6 +12,35 @@ export const ContainerImages = styled.div`
   align-items: center;
   padding: 0 15px;
   max-height: 154px;
+
+  @media (max-width: 700px) {
+    /* justify-content: center; */
+
+    /* div {
+      display: none;
+    } */
+    img {
+      display: none;
+    }
+    img:first-child {
+      display: block;
+      width: 100px;
+      height: 100px;
+    }
+  }
+  @media (max-width: 500px) {
+    justify-content: center;
+
+    /* div {
+      display: none;
+    } */
+    img {
+      display: none;
+    }
+    img:first-child {
+      display: none;
+    }
+  }
 `;
 export const ContainerNavigation = styled.div`
   width: 100%;
