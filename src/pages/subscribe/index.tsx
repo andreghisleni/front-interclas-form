@@ -87,7 +87,7 @@ interface SubscribeFormData {
 
 const vMEMBER = 100;
 const vSTAFF = 100;
-const vDRIVER = 85;
+const vDRIVER = 90;
 
 const Subscribe: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
@@ -961,7 +961,7 @@ const Subscribe: React.FC = () => {
                   <Color>MOTORISTAS</Color>
                 </h2>
                 <h2>
-                  <Color>DESPESA: R$ 85,00 - Somente Alimentação</Color>
+                  <Color>DESPESA: R$ 90,00 - Somente Alimentação</Color>
                 </h2>
                 <div className="row" style={{ marginTop: 20 }}>
                   <Input
