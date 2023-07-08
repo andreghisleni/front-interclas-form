@@ -446,7 +446,7 @@ const Subscribe: React.FC = () => {
                       justifyContent: "start",
                     }}
                   >
-                    <Color>Dados do responsável do clã:</Color>
+                    <Color>Dados do responsável pelo clã:</Color>
                   </h2>
                   <div className="row">
                     <Input

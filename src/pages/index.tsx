@@ -22,7 +22,7 @@ const Home: React.FC = () => {
               <ListContainer>
                 <li>
                   <a
-                    href="https://drive.google.com/file/d/1GOVOc3CUxSByCcPOFI5SSfs52WcBAuHD/view?usp=drive_link"
+                    href="https://drive.google.com/file/d/1KveOGBwVtanRwxuYlMSexTCW3e2xENd2/view?usp=drive_link"
                     target="_blank"
                     rel="noreferrer"
                   >
