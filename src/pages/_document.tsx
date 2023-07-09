@@ -60,7 +60,7 @@ export default class MyDocument extends Document {
             content="Formulário de inscrição para o interclãs"
           />
 
-          <meta property="og:image" content="./interclas_distintivo.png" />
+          <meta property="og:image" content="/interclas_distintivo.png" />
           <meta property="og:image:type" content="image/png" />
           <meta property="og:image:width" content="790" />
           <meta property="og:image:height" content="790" />
