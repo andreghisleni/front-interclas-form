@@ -4,6 +4,7 @@ import { ThemeProvider } from "styled-components";
 
 import { ToastContainer } from "react-toastify";
 
+import { Analytics } from "@vercel/analytics/react";
 import { GlobalStyle } from "../styles/global";
 import theme from "../styles/theme";
 import { Header } from "../components/Header";
@@ -22,6 +23,7 @@ const MyApp: React.FC<AppProps> = ({ Component, pageProps }) => {
       </AppProvider>
       <GlobalStyle />
       <ToastContainer />
+      <Analytics />
     </ThemeProvider>
   );
 };
