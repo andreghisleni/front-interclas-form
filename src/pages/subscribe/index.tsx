@@ -497,7 +497,6 @@ const Subscribe: React.FC = () => {
                     type="number"
                     placeholder="0"
                     min={1}
-                    required
                   />
                   <Button
                     style={{
@@ -708,8 +707,7 @@ const Subscribe: React.FC = () => {
                     label="Número de Mestres / Assistentes / Diretores"
                     type="number"
                     placeholder="0"
-                    min={1}
-                    required
+                    min={0}
                   />
                   <Button
                     style={{
@@ -970,8 +968,7 @@ const Subscribe: React.FC = () => {
                     label="Número de motoristas"
                     type="number"
                     placeholder="0"
-                    min={1}
-                    required
+                    min={0}
                   />
                   <Button
                     style={{
