@@ -11,6 +11,8 @@ import { Header } from "../components/Header";
 import { Footer } from "../components/Footer";
 import { AppProvider } from "../hooks";
 
+import "../styles/globals.css";
+
 import "react-toastify/dist/ReactToastify.css";
 
 const MyApp: React.FC<AppProps> = ({ Component, pageProps }) => {

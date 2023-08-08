@@ -3,9 +3,46 @@ import React from "react";
 import Head from "next/head";
 
 import { GetStaticProps } from "next";
+
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+
 import { Color } from "../styles/pages/subscribe";
 import { api } from "../services/api";
 import { Card, CardsContainer } from "../styles/pages/metrics";
+
+interface IMembers {
+  id: string;
+  name: string;
+  arrive_for_lunch: boolean;
+  sex: string;
+  member_type: {
+    id: string;
+    name: string;
+    label: string;
+    description: string;
+    created_at: string;
+    updated_at: string;
+  };
+  inscription: {
+    id: string;
+    cla_name: string;
+    scout_group: {
+      name: string;
+      number: string;
+      city: string;
+      state: string;
+      district_name: string;
+    };
+  };
+}
 
 export interface IMetrics {
   inscriptions: number;
@@ -22,7 +59,8 @@ export interface IMetrics {
 
 const Metrics: React.FC<{
   metrics: IMetrics;
-}> = ({ metrics }) => {
+  members: IMembers[];
+}> = ({ metrics, members }) => {
   return (
     <>
       <Head>
@@ -76,6 +114,54 @@ const Metrics: React.FC<{
                 </div>
               </Card>
             </CardsContainer>
+
+            <div className="row">
+              <h1>
+                <Color>Membros Inscritos</Color>
+              </h1>
+            </div>
+            <div className="row bg-white p-4 shadow-md rounded-md">
+              <Table>
+                <TableCaption>Membros Inscritos</TableCaption>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="w-[300px]">Nome</TableHead>
+                    <TableHead>Sexo</TableHead>
+                    <TableHead>Tipo</TableHead>
+                    <TableHead>Nome Do Clã</TableHead>
+                    <TableHead>Grupo</TableHead>
+                    <TableHead>Cidade</TableHead>
+                    <TableHead>Distrito</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {members.map((member) => (
+                    <TableRow key={member.id}>
+                      <TableCell className="font-medium">
+                        {member.name}
+                      </TableCell>
+                      <TableCell>{member.sex}</TableCell>
+                      <TableCell>{member.member_type.label}</TableCell>
+                      <TableCell>{member.inscription.cla_name}</TableCell>
+                      <TableCell>
+                        {member.inscription.scout_group.name} -{" "}
+                        {member.inscription.scout_group.number}/
+                        {member.inscription.scout_group.state}
+                      </TableCell>
+                      <TableCell>
+                        {member.inscription.scout_group.city}
+                      </TableCell>
+                      <TableCell>
+                        {member.inscription.scout_group.district_name}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+            {/* <div className="row">
+              <pre>{JSON.stringify(members, null, 2)}</pre>
+            </div> */}
           </div>
         </section>
       </main>
@@ -85,10 +171,12 @@ const Metrics: React.FC<{
 
 export const getStaticProps: GetStaticProps = async () => {
   const getMetrics = await api.get("/inscriptions/count");
+  const getMembers = await api.get("/inscriptions/members");
 
   return {
     props: {
       metrics: getMetrics.data,
+      members: getMembers.data,
     },
     revalidate: 15,
   };
