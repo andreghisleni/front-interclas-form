@@ -89,6 +89,36 @@ const vMEMBER = 100;
 const vSTAFF = 100;
 const vDRIVER = 90;
 
+const inDev = process.env.NODE_ENV === "development" ? true : undefined;
+
+const initData = inDev && {
+  cla_name: "Clã Desbravador",
+  scout_group: {
+    name: "GE Xapecó",
+    number: "86",
+    city: "Chapecó",
+    state: "SC",
+    district_name: "Oeste",
+  },
+
+  payment: {
+    pix_key: "10494923903",
+    bank: "001",
+    agency: "001",
+    account: "0000001",
+    holder: {
+      name: "André Ghisleni Raimann",
+      document: "104.949.239-03",
+    },
+  },
+
+  responsable: {
+    name: "André Ghisleni Raimann",
+    email: "andre@andreg.com.br",
+    phone: "(49) 9 9938-3783",
+  },
+};
+
 const Subscribe: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
   const [loading, setLoading] = useState(false);
@@ -143,6 +173,7 @@ const Subscribe: React.FC = () => {
   const handleSubmit: SubmitHandler<SubscribeFormData> = useCallback(
     async (data): Promise<void> => {
       try {
+        console.log(data);
         const schema = Yup.object().shape({
           cla_name: Yup.string().required("Nome da CLã é obrigatório"),
           scout_group: Yup.object().shape({
@@ -186,10 +217,20 @@ const Subscribe: React.FC = () => {
 
         formRef.current?.setErrors({});
 
+        if (numMembers === 0 && numStaffs === 0) {
+          toast(
+            "Você precisa ter pelo menos um participante, como mestre ou pioneiro",
+            {
+              type: "error",
+            }
+          );
+          return;
+        }
+
         const formData = {
           ...data,
           receipt_file: fileName,
-          members: data.members,
+          members: numMembers === 0 ? [] : data.members,
           staff: numStaffs === 0 ? [] : data.staff,
           drivers: numDrivers === 0 ? [] : data.drivers,
         };
@@ -201,6 +242,7 @@ const Subscribe: React.FC = () => {
         setLoading(false);
         setSuccess(true);
       } catch (err) {
+        console.log(err);
         if (err instanceof Yup.ValidationError) {
           formRef.current?.setErrors(getValidationErrors(err));
         } else {
@@ -213,7 +255,7 @@ const Subscribe: React.FC = () => {
         setLoading(false);
       }
     },
-    [setLoading, setSuccess, fileName, numStaffs, numDrivers]
+    [setLoading, setSuccess, fileName, numStaffs, numDrivers, numMembers]
   );
 
   const handleClickSetMembers = useCallback(() => {
@@ -320,7 +362,11 @@ const Subscribe: React.FC = () => {
                   <Color>Formulário de inscrição para o INTERCLÃS</Color>
                 </h1>
               </div>
-              <Form onSubmit={handleSubmit} ref={formRef}>
+              <Form
+                onSubmit={handleSubmit}
+                ref={formRef}
+                initialData={initData || {}}
+              >
                 <div className="row" style={{ marginTop: 20 }}>
                   <Input
                     name="cla_name"
@@ -496,7 +542,7 @@ const Subscribe: React.FC = () => {
                     label="Número de jovens (pioneiros e seniores)"
                     type="number"
                     placeholder="0"
-                    min={1}
+                    min={0}
                   />
                   <Button
                     style={{
