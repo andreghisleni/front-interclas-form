@@ -48,7 +48,7 @@ export const Header: React.FC = () => {
             <ContentMenu>
               <ul>
                 <Link href="/">Home</Link>
-                <Link href="/subscribe">Inscreva-se</Link>
+                {/* <Link href="/subscribe">Inscreva-se</Link> */}
               </ul>
             </ContentMenu>
             <div className="divider" />
