@@ -19,8 +19,8 @@ const nextConfig = {
   },
   async redirects() {
     return [
-      { source: '/subscribe', destination: '/', permanent: true },
-      { source: '/metrics', destination: '/', permanent: true },
+      // { source: '/subscribe', destination: '/', permanent: true },
+      // { source: '/metrics', destination: '/', permanent: true },
     ]
   }
 }
